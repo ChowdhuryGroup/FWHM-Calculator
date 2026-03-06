@@ -9,7 +9,7 @@ import numpy as np
 import os
 import tifffile as tiff
 
-focalSpotImagePath = r"C:\Users\Andy\OneDrive - The Ohio State University\Lab Files\GRAY Laser\Regen\Pump spots\2026-02-22\right 34.tif"
+focalSpotImagePath = r"C:\Users\Andy\OneDrive - The Ohio State University\Lab Files\GRAY Laser\Regen\Pump spots\2026-02-22\right 42.tif"
 bkgPath = r"C:\Users\Andy\OneDrive - The Ohio State University\Lab Files\2026-01-31 Quantizing Nanolaminates HfO2-SiO2\focal spot\fs_Merge_3.tiff"
 
 bkg = False
@@ -154,9 +154,9 @@ cy, cx = props.centroid_weighted
 theta = props.orientation
 theta_deg = np.degrees(theta)
 
-mu20 = props.moments_weighted_central[2, 0]
-mu02 = props.moments_weighted_central[0, 2]
-mu11 = props.moments_weighted_central[1, 1]
+mu20 = props.moments_weighted[2, 0]
+mu02 = props.moments_weighted[0, 2]
+mu11 = props.moments_weighted[1, 1]
 
 M00 = props.weighted_moments[0, 0]
 Sigma = np.array([[mu20, mu11], [mu11, mu02]]) / M00
@@ -219,6 +219,9 @@ plt.subplot(1, 3, 1)
 plt.imshow(data_rot, cmap='inferno')
 plt.xlim((plot_lower_y, plot_upper_y))
 plt.ylim((plot_lower_x, plot_upper_x))
+plt.axhline(y=np.argmax(x_lineout))
+plt.axvline(x=np.argmax(y_lineout))
+#plt.colorbar()
 
 plt.subplot(1, 3, 2)
 plt.plot(np.arange(len(x_lineout)),x_lineout)
