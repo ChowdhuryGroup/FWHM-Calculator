@@ -22,12 +22,13 @@ px_per_um = 1.0/6.0
 lw = 10
 power = 4.9  #Watts
 rr = 500.0 #Hz
+aoi = np.arctan(1.76)
 
 
 roi = {"x0": None, "x1": None, "y0": None, "y1": None}
 
-def peak_fluence(power, rr, fwhm_x, fwhm_y):
-    return (4.0 * (power / rr) * np.log(2.0)) / (np.pi * fwhm_x * fwhm_y)
+def peak_fluence(power, rr, fwhm_x, fwhm_y, aoi=0):
+    return (4.0 * (power / rr) * np.log(2.0) * np.cos(aoi)) / (np.pi * fwhm_x * fwhm_y)
 
 def px_to_um(px):
     return px*(1.0/px_per_um)
@@ -158,7 +159,7 @@ mu20 = props.moments_weighted[2, 0]
 mu02 = props.moments_weighted[0, 2]
 mu11 = props.moments_weighted[1, 1]
 
-M00 = props.weighted_moments[0, 0]
+M00 = props.moments_weighted[0, 0]
 Sigma = np.array([[mu20, mu11], [mu11, mu02]]) / M00
 
 evals, evecs = np.linalg.eigh(Sigma)
@@ -261,4 +262,4 @@ print(f"y FWHM: {fwhm_y_um} microns")
 print()
 print(f"ratio: {np.max(np.array([fwhm_x_px, fwhm_y_px]))/np.min(np.array([fwhm_x_px, fwhm_y_px]))}")
 print()
-print(f"fluence: {peak_fluence(power, rr, um_to_cm(fwhm_x_um), um_to_cm(fwhm_y_um)):.2f} J/cm^2")
+print(f"fluence: {peak_fluence(power, rr, um_to_cm(fwhm_x_um), um_to_cm(fwhm_y_um), aoi=aoi):.2f} J/cm^2")
